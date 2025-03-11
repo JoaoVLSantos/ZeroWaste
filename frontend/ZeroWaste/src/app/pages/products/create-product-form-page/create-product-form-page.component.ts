@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { API_URL } from '../../../utils/contants';
 
 @Component({
   selector: 'app-create-product-form-page',
+  standalone: true, // Se o componente for standalone, adicione esta linha
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -23,11 +24,12 @@ import { API_URL } from '../../../utils/contants';
   templateUrl: './create-product-form-page.component.html',
   styleUrl: './create-product-form-page.component.css'
 })
-export class CreateProductFormPageComponent {
+export class CreateProductFormPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private validationErrorMessage = inject(ValidationErrorMessage);
   private router = inject(Router);
 
+  // Definição do Formulário
   public productForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3) , Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
@@ -36,12 +38,40 @@ export class CreateProductFormPageComponent {
     unitPrice: ['', [Validators.required, Validators.min(0.00)]],
     stock: ['', [Validators.required, Validators.min(0)]],
     expiresAt: ['', [Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+    promotions: [[]], 
   });
 
-  public getErrorMessage(controlName: string): string | null {
-    const validationErrorMessage = this.validationErrorMessage.getValidationErrorMessage(this.productForm.get(controlName)!);
+  public promotionList: { id: number; name: string }[] = [];
+  public isLoadingPromotions: boolean = true;
+  public hasErrorLoadingPromotions: boolean = false;
 
-    return validationErrorMessage;
+
+  private async loadPromotions() {
+    try {
+      const response = await fetch(API_URL + "/promotions");
+      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+      
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        this.promotionList = [...data];
+      } else {
+        throw new Error("Resposta da API inválida");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar as promoções:", error);
+      this.hasErrorLoadingPromotions = true;
+      alert("Erro ao carregar as promoções");
+    } finally {
+      this.isLoadingPromotions = false;
+    }
+  }
+
+  ngOnInit(): void {
+    this.loadPromotions();
+  }
+
+  public getErrorMessage(controlName: string): string | null {
+    return this.validationErrorMessage.getValidationErrorMessage(this.productForm.get(controlName)!);
   }
 
   public async onSubmit(event: SubmitEvent) {
@@ -52,7 +82,7 @@ export class CreateProductFormPageComponent {
     }
 
     try {
-      await this.saveProduct(this.productForm.value)
+      await this.saveProduct(this.productForm.value);
       alert('Produto salvo com sucesso');
       this.router.navigate(['/products']);
     } catch (error) {
