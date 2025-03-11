@@ -108,7 +108,7 @@ export class UpdateProductFormPageComponent implements OnInit {
 
       if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
-      const promotions = await response.json();
+      const { promotions } = await response.json();
       if (Array.isArray(promotions)) {
         this.promotionsList = [...promotions];
       } else {
@@ -139,7 +139,7 @@ export class UpdateProductFormPageComponent implements OnInit {
       if (!response.ok) {
         switch (response.status) {
           case 401:
-            alert('Você não tem permissão para visualizar este produto');
+            alert('Você não tem permissão para atualizar produtos');
             break;
           case 404:
             alert('Produto não encontrado');
@@ -151,7 +151,7 @@ export class UpdateProductFormPageComponent implements OnInit {
         return;
       }
 
-      const product = await response.json();
+      const { product } = await response.json();
       this.productForm.setValue({
         name: product.name,
         description: product.description,

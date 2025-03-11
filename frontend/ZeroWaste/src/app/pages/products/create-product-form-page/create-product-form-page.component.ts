@@ -11,7 +11,7 @@ import { API_URL } from '../../../utils/contants';
 
 @Component({
   selector: 'app-create-product-form-page',
-  standalone: true, // Se o componente for standalone, adicione esta linha
+  standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -29,7 +29,6 @@ export class CreateProductFormPageComponent implements OnInit {
   private validationErrorMessage = inject(ValidationErrorMessage);
   private router = inject(Router);
 
-  // Definição do Formulário
   public productForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3) , Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
@@ -48,12 +47,21 @@ export class CreateProductFormPageComponent implements OnInit {
 
   private async loadPromotions() {
     try {
-      const response = await fetch(API_URL + "/promotions");
+      const response = await fetch(API_URL + "/promotions",{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        });
+
       if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
       
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        this.promotionList = [...data];
+    const { promotions } = await response.json();
+    
+    if (Array.isArray(promotions)) {
+      this.promotionList = [...promotions];
       } else {
         throw new Error("Resposta da API inválida");
       }
