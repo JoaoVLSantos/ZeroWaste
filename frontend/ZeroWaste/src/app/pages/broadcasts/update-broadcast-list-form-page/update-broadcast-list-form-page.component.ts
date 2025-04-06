@@ -51,9 +51,9 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     this.broadcastListForm.setControl('emails', value);
   }
 
-  public addEmail() {
+  public addEmail(value = '') {
     this.emails.push(
-      this.fb.control('', [Validators.required, Validators.email])
+      this.fb.control(value, [Validators.required, Validators.email])
     );
   }
 
@@ -112,6 +112,10 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     const broadcastListId = this.route.snapshot.paramMap.get('id')!;
 
     const broadcastListData = await this.broadcastsService.getBroadcastById(Number(broadcastListId));
+
+    broadcastListData.emails.forEach(email => {
+      this.addEmail(email);
+    });
 
     this.broadcastListForm.setValue({
       name: broadcastListData.name,
