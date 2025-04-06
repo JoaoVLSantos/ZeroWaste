@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerowaste.controllers.broadcast.BroadcastsController;
 import com.zerowaste.dtos.broadcasts.CreateBroadcastListDTO;
 import com.zerowaste.dtos.broadcasts.GetBroadcastDTO;
+import com.zerowaste.dtos.broadcasts.GetBroadcastListByIdResponseBodyDTO;
 import com.zerowaste.dtos.broadcasts.UpdateBroadcastListDTO;
 import com.zerowaste.models.broadcast.BroadcastList;
+import com.zerowaste.models.broadcast.BroadcastListSendType;
 import com.zerowaste.services.broadcasts.CreateBroadcastListService;
 import com.zerowaste.services.broadcasts.UpdateBroadcastListService;
 import com.zerowaste.services.broadcasts.exceptions.BroadcastListNotFoundException;
@@ -116,11 +118,20 @@ class BroadcastsControllerTest {
     @Test
     void testGetBroadcastListById() throws Exception {
         Long id = 1L;
-        BroadcastList broadcastList = new BroadcastList();
-        broadcastList.setId(id);
-        broadcastList.setName("Broadcast List 1");
 
-        when(getBroadcastListByIdService.execute(id)).thenReturn(broadcastList);
+        var getBroadcastListByIdServiceDTO = new GetBroadcastListByIdResponseBodyDTO(
+            1L,
+            "Broadcast List 1",
+            "Description",
+            BroadcastListSendType.MANUAL,
+            new String[] {},
+            new Long[] {},
+            "2023-10-01T00:00:00Z",
+            "2023-10-01T00:00:00Z",
+            null
+        );
+
+        when(getBroadcastListByIdService.execute(id)).thenReturn(getBroadcastListByIdServiceDTO);
 
         mockMvc.perform(get("/broadcasts/{id}", id))
             .andExpect(status().isOk())
