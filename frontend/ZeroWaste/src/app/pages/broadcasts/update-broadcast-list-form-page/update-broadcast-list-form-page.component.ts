@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from "@angular/core";
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { ValidationErrorMessage } from "../../../services/ValidationErrorMessage";
 import { InputComponent } from "../../../components/form/input/input.component";
@@ -42,6 +42,10 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     productsIds: [[] as string[], [Validators.required, Validators.minLength(1)]],
   });
   public products = signal<Product[]>([]);
+
+  public get registeredProducts(): string[] {
+    return this.broadcastListForm.get('productsIds')!.value as string[];
+  }
 
   public get emails() {
     return this.broadcastListForm.get('emails') as FormArray;
@@ -116,6 +120,8 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     broadcastListData.emails.forEach(email => {
       this.addEmail(email);
     });
+
+    (this.broadcastListForm.get('productsIds') as FormControl).setValue(broadcastListData.productsIds.map((id) => id.toString()));
 
     this.broadcastListForm.setValue({
       name: broadcastListData.name,

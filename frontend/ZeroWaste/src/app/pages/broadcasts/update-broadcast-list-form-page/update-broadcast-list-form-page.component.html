@@ -91,7 +91,7 @@
         formControlName="productsIds"
       >
       @for (product of products(); track product.id) {
-        <option [value]="product.id">
+        <option [value]="product.id" [selected]="registeredProducts.includes(product.id.toString())">
           {{product.name}}
         </option>
       }
