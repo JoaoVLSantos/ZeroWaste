@@ -10,7 +10,6 @@ import com.zerowaste.dtos.broadcasts.CreateBroadcastListDTO;
 import com.zerowaste.dtos.broadcasts.GetBroadcastDTO;
 import com.zerowaste.dtos.broadcasts.GetBroadcastListByIdResponseBodyDTO;
 import com.zerowaste.dtos.broadcasts.UpdateBroadcastListDTO;
-import com.zerowaste.models.broadcast.BroadcastList;
 import com.zerowaste.models.broadcast.BroadcastListSendType;
 import com.zerowaste.services.broadcasts.CreateBroadcastListService;
 import com.zerowaste.services.broadcasts.UpdateBroadcastListService;
