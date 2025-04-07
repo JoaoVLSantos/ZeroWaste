@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.zerowaste.dtos.broadcasts.GetBroadcastListByIdResponseBodyDTO;
 import com.zerowaste.models.broadcast.BroadcastEmail;
 import com.zerowaste.models.broadcast.BroadcastList;
 import com.zerowaste.models.broadcast.BroadcastListSendType;
@@ -61,11 +62,23 @@ class GetBroadcastListByIdServiceTest {
     @Test
     @DisplayName("It should return the broadcast list when it exists and is not deleted")
     void itShouldReturnBroadcastListWhenExistsAndNotDeleted() {
+        var getBroadcastListByIdServiceDTO = new GetBroadcastListByIdResponseBodyDTO(
+            1L,
+            "Broadcast List 1",
+            "Description",
+            BroadcastListSendType.MANUAL,
+            new String[]{},
+            new Long[]{},
+            "2023-10-01T00:00:00Z",
+            "2023-10-01T00:00:00Z",
+            null
+        );
+
         when(broadcastListRepository.findById(broadcastList.getId())).thenReturn(Optional.of(broadcastList));
-        BroadcastList result = assertDoesNotThrow(() -> sut.execute(1L));
+        GetBroadcastListByIdResponseBodyDTO result = assertDoesNotThrow(() -> sut.execute(1L));
         
-        assertEquals(broadcastList.getId(), result.getId());
-        assertEquals(broadcastList.getName(), result.getName());
+        assertEquals(broadcastList.getId(), result.id());
+        assertEquals(broadcastList.getName(), result.name());
         verify(broadcastListRepository, times(1)).findById(broadcastList.getId());
     }
 

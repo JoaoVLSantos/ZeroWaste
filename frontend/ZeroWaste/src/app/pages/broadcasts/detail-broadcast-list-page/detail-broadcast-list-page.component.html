@@ -1,0 +1,68 @@
+<section class="container">
+  <header>
+    <h1>Detalhes da lista de transmissão</h1>
+  </header>
+
+  <form [formGroup]="broadcastListForm">
+    <div class="form-group">
+      <label for="name">Nome</label>
+      <app-input
+        [id]="'name'"
+        [name]="'name'"
+        [type]="'text'"
+        [placeholder]="'Digite o nome do produto'"
+        formControlName="name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <app-textarea
+        [id]="'description'"
+        [name]="'description'"
+        [placeholder]="'Digite a descrição do produto'"
+        formControlName="description"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="sendType">Categoria</label>
+      <app-select [id]="'sendType'" [name]="'sendType'" [placeholder]="'Selecione um tipo de envio'" formControlName="sendType">
+        <option value="MANUAL">Manual</option>
+        <option value="INTERVAL">Intermitente</option>
+      </app-select>
+    </div>
+
+    <div class="form-group" formArrayName="emails">
+      <label for="emails">E-mails</label>
+
+      @for (email of emails.controls; track $index) {
+        <app-input
+          [id]="'email-' + $index"
+          [name]="'email-' + $index"
+          [type]="'text'"
+          [placeholder]="'Digite o email'"
+          [disabled]="true"
+          [formControlName]="$index"
+        />
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="products-ids">Produtos</label>
+
+      <app-select
+        [id]="'products-ids'"
+        [name]="'products-ids'"
+        [multiple]="true"
+        formControlName="productsIds"
+      >
+        @for (product of products(); track product.id) {
+          <option [value]="product.id" [selected]="registeredProducts.includes(product.id.toString())">
+            {{product.name}}
+          </option>
+        }
+      </app-select>
+    </div>
+  </form>
+</section>

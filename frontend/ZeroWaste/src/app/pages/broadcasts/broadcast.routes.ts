@@ -3,6 +3,7 @@ import { authGuard } from "../../auth/auth.guard";
 import { ListBroadcastPageComponent } from "./list-broadcast-page/list-broadcast-page.component";
 import { CreateBroadcastListFormPageComponent } from "./create-broadcast-list-form-page/create-broadcast-list-form-page.component";
 import { UpdateBroadcastListFormPageComponent } from "./update-broadcast-list-form-page/update-broadcast-list-form-page.component";
+import { DetailBroadcastListPageComponent } from "./detail-broadcast-list-page/detail-broadcast-list-page.component";
 
 export const routes: Routes = [
   {
@@ -13,6 +14,13 @@ export const routes: Routes = [
         title: 'Listas de transmissão',
         component: ListBroadcastPageComponent,
         canActivate: [authGuard],
+      },
+      {
+        path: ':id',
+        title: 'Detalhes da lista de transmissão',
+        component: DetailBroadcastListPageComponent,
+        canActivate: [authGuard],
+        data: { role: 'ADMIN' },
       },
       {
         path: 'create',

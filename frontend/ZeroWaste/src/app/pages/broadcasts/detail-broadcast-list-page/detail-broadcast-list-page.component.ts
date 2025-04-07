@@ -13,7 +13,7 @@ import { UpdateBroadcastDTO } from "../broadcast";
 import { ProductService } from "../../../services/ProductService";
 
 @Component({
-  selector: 'app-update-broadcast-list-form-page',
+  selector: 'app-detail-broadcast-list-page',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -21,12 +21,11 @@ import { ProductService } from "../../../services/ProductService";
     InputComponent,
     TextareaComponent,
     SelectComponent,
-    ButtonComponent,
   ],
-  templateUrl: './update-broadcast-list-form-page.component.html',
-  styleUrl: './update-broadcast-list-form-page.component.css',
+  templateUrl: './detail-broadcast-list-page.component.html',
+  styleUrl: './detail-broadcast-list-page.component.css',
 })
-export class UpdateBroadcastListFormPageComponent implements OnInit {
+export class DetailBroadcastListPageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private validationErrorMessage = inject(ValidationErrorMessage);
   private router = inject(Router);
@@ -38,7 +37,7 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
     description: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
     sendType: ['', [Validators.required]],
-    emails: this.fb.array([this.fb.control('', [Validators.required, Validators.email])]),
+    emails: this.fb.array([]),
     productsIds: [[] as string[], [Validators.required, Validators.minLength(1)]],
   });
   public products = signal<Product[]>([]);
@@ -61,55 +60,9 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
     );
   }
 
-  public removeEmail(index: number) {
-    if (this.emails.length > 1) {
-      this.emails = this.fb.array(this.emails.controls.filter((_, i) => i !== index));
-    }
-  }
-
-  public getErrorMessage(controlName: string, index?: number): string | null {
-    if (index !== undefined) {
-      return this.validationErrorMessage.getValidationErrorMessage(
-        this.broadcastListForm.get(controlName)!.get(index.toString())!,
-      );
-    }
-
-    const validationErrorMessage = this.validationErrorMessage.getValidationErrorMessage(this.broadcastListForm.get(controlName)!);
-
-    return validationErrorMessage;
-  }
-
-  public async onSubmit(event: SubmitEvent) {
-    event.preventDefault();
-
-    Object.values(this.broadcastListForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-
-    if (this.broadcastListForm.invalid) {
-      return;
-    }
-
-    const broadcastListId = this.route.snapshot.paramMap.get('id')!;
-    const requestBody = {
-      ...this.broadcastListForm.value,
-      productsIds: (this.broadcastListForm.value.productsIds as unknown as string[])!.map((id: string) => parseInt(id)),
-    } as UpdateBroadcastDTO;
-
-    try {
-      await this.broadcastsService.updateBroadcast(
-        Number(broadcastListId),
-        requestBody,
-      );
-
-      this.router.navigate(['/broadcasts']);
-    } catch (error) {
-      console.error('Erro ao atualizar produto', error);
-      alert('Erro ao atualizar produto');
-    }
-  }
-
   public async ngOnInit(): Promise<void> {
+    this.broadcastListForm.disable();
+
     const products = await this.productsService.getAllProducts();
     this.products.set(products);
 
@@ -121,7 +74,13 @@ export class UpdateBroadcastListFormPageComponent implements OnInit {
       this.addEmail(email);
     });
 
-    (this.broadcastListForm.get('productsIds') as FormControl).setValue(broadcastListData.productsIds.map((id) => id.toString()));
+    (this.broadcastListForm.get('emails') as FormArray).controls.forEach(control => {
+      control.disable();
+    });
+
+    (this.broadcastListForm.get('productsIds') as FormControl).setValue(
+      broadcastListData.productsIds.map((id) => id.toString())
+    );
 
     this.broadcastListForm.setValue({
       name: broadcastListData.name,
