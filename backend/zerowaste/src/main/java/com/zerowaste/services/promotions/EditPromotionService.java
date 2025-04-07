@@ -19,7 +19,7 @@ import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
 @Service
 public class EditPromotionService {
 
-    private PromotionsRepository promotionsRepository;
+    private final PromotionsRepository promotionsRepository;
     private final ProductsRepository productRepository;
 
     public EditPromotionService(PromotionsRepository promotionsRepository, ProductsRepository productRepository) {
@@ -51,7 +51,7 @@ public class EditPromotionService {
 
         // Caso nenhum produto seja válido
         if (products.isEmpty() && !dto.productIds().isEmpty())
-            throw new ProductNotFoundException("Nenhum produto válido foi encontrado!");
+            throw new ProductNotFoundException("Nenhum produto válido foi encontrado!" + products.isEmpty());
 
         p.setProducts(products);
 
