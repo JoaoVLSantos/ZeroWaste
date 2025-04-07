@@ -3,6 +3,8 @@ import com.zerowaste.models.promotion.Promotion;
 import com.zerowaste.repositories.PromotionsRepository;
 import com.zerowaste.services.promotions.GetPromotionPercentageService;
 import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
+
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -63,6 +65,26 @@ class GetPromotionPercentageServiceTest {
         // Arrange
         int percentage = 20;
         when(promotionsRepository.findByPercentageLessThanEqual(percentage)).thenReturn(Collections.emptyList());
+        // Act & Assert
+        assertThrows(PromotionNotFoundException.class, () -> sut.execute(percentage));
+    }
+
+    @Test
+    @DisplayName("It should throw PromotionNotFoundException")
+    void itShouldThrowExceptionForPromotionNotFound2() {
+        // Arrange
+        int percentage = 15;
+        Promotion promotion = new Promotion();
+        promotion.setId(1L);
+        promotion.setName("Promotion Name");
+        promotion.setPercentage(percentage);
+        promotion.setStartsAt(java.time.LocalDate.now().minusDays(1));
+        promotion.setEndsAt(java.time.LocalDate.now().plusDays(1));
+        promotion.setDeletedAt(LocalDate.now());
+
+        List<Promotion> expectedPromotions = Collections.singletonList(promotion);
+        when(promotionsRepository.findByPercentageLessThanEqual(percentage)).thenReturn(expectedPromotions);
+
         // Act & Assert
         assertThrows(PromotionNotFoundException.class, () -> sut.execute(percentage));
     }
