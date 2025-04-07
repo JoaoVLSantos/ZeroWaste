@@ -62,18 +62,6 @@ class GetBroadcastListByIdServiceTest {
     @Test
     @DisplayName("It should return the broadcast list when it exists and is not deleted")
     void itShouldReturnBroadcastListWhenExistsAndNotDeleted() {
-        var getBroadcastListByIdServiceDTO = new GetBroadcastListByIdResponseBodyDTO(
-            1L,
-            "Broadcast List 1",
-            "Description",
-            BroadcastListSendType.MANUAL,
-            new String[]{},
-            new Long[]{},
-            "2023-10-01T00:00:00Z",
-            "2023-10-01T00:00:00Z",
-            null
-        );
-
         when(broadcastListRepository.findById(broadcastList.getId())).thenReturn(Optional.of(broadcastList));
         GetBroadcastListByIdResponseBodyDTO result = assertDoesNotThrow(() -> sut.execute(1L));
         

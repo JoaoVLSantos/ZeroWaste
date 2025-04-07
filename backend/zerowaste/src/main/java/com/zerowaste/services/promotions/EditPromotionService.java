@@ -2,6 +2,7 @@ package com.zerowaste.services.promotions;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
 @Service
 public class EditPromotionService {
 
-    private PromotionsRepository promotionsRepository;
+    private final PromotionsRepository promotionsRepository;
     private final ProductsRepository productRepository;
 
     public EditPromotionService(PromotionsRepository promotionsRepository, ProductsRepository productRepository) {
@@ -29,14 +30,16 @@ public class EditPromotionService {
     public void execute(Long id, EditPromotionDTO dto)
             throws PromotionNotFoundException, ProductNotFoundException, InvalidDatePeriodException {
 
-        Promotion p = promotionsRepository.findById(id).get();
-
-        if (p == null || p.getDeletedAt() != null)
+        Optional<Promotion> promotionOpt = promotionsRepository.findById(id);
+        
+        if (!promotionOpt.isPresent() || promotionOpt.get().getDeletedAt() != null)
             throw new PromotionNotFoundException("Promoção não encontrada!");
-
+        
         if (dto.startsAt().isAfter(dto.endsAt()))
             throw new InvalidDatePeriodException("The start date must be before the end date.");
-
+        
+        Promotion p = promotionOpt.get();
+        
         p.setName(dto.name());
         p.setPercentage(dto.percentage());
         p.setStartsAt(dto.startsAt());
@@ -48,7 +51,7 @@ public class EditPromotionService {
 
         // Caso nenhum produto seja válido
         if (products.isEmpty() && !dto.productIds().isEmpty())
-            throw new ProductNotFoundException("Nenhum produto válido foi encontrado!");
+            throw new ProductNotFoundException("Nenhum produto válido foi encontrado!" + products.isEmpty());
 
         p.setProducts(products);
 
