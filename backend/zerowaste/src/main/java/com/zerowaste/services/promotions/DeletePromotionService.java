@@ -4,6 +4,8 @@ import com.zerowaste.models.promotion.Promotion;
 import com.zerowaste.repositories.PromotionsRepository;
 import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
 import java.time.LocalDate;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,14 +19,16 @@ public class DeletePromotionService {
 
     public void execute(Long id) throws PromotionNotFoundException {
 
-        Promotion p = promotionsRepository.findById(id).get();
+        Optional<Promotion> promotionOpt = promotionsRepository.findById(id);
 
-        if (p == null || p.getDeletedAt() != null)
+        if (!promotionOpt.isPresent() || promotionOpt.get().getDeletedAt() != null)
             throw new PromotionNotFoundException("Promoção não encontrada!");
 
-        p.setDeletedAt(LocalDate.now());
+        Promotion promotion = promotionOpt.get();
 
-        promotionsRepository.save(p);
+        promotion.setDeletedAt(LocalDate.now());
+
+        promotionsRepository.save(promotion);
 
     }
 
