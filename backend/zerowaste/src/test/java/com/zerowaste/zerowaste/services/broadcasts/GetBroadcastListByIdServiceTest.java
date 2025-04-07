@@ -62,7 +62,6 @@ class GetBroadcastListByIdServiceTest {
     @Test
     @DisplayName("It should return the broadcast list when it exists and is not deleted")
     void itShouldReturnBroadcastListWhenExistsAndNotDeleted() {
-
         when(broadcastListRepository.findById(broadcastList.getId())).thenReturn(Optional.of(broadcastList));
         GetBroadcastListByIdResponseBodyDTO result = assertDoesNotThrow(() -> sut.execute(1L));
         

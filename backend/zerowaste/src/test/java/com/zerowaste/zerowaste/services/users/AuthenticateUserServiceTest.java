@@ -1,9 +1,14 @@
 package com.zerowaste.zerowaste.services.users;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.when;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.zerowaste.dtos.AuthenticateUserDTO;
 import com.zerowaste.models.user.User;
 import com.zerowaste.models.user.UserRole;
@@ -66,5 +73,51 @@ class AuthenticateUserServiceTest {
         //Validação
         assertNotNull(token);
         assertFalse(token.isEmpty());
+    }
+
+    @Test
+    void validateTokenTest() throws Exception {
+        //Definindo o jwtSecret (via reflection)
+        Field jwtSecretField = AuthenticateUserService.class.getDeclaredField("jwtSecret");
+        jwtSecretField.setAccessible(true);
+        jwtSecretField.set(authenticateUserService, "meusegredosecreto");
+
+        //Criando um novo payload com o campo "email"
+        String email = "usuario@exemplo.com";
+        String jsonPayload = "{\"email\":\"" + email + "\"}";
+
+        //Criando um token válido com o secret e o issuer esperado
+        Algorithm algorithm = Algorithm.HMAC256("meusegredosecreto");
+        String token = JWT.create()
+                .withIssuer("zerowaste")
+                .withSubject(jsonPayload)
+                .sign(algorithm);
+
+        //Acessando o método privado via reflection
+        Method method = AuthenticateUserService.class.getDeclaredMethod("validateToken", String.class);
+        method.setAccessible(true);
+
+        //Executando o método
+        String result = (String) method.invoke(authenticateUserService, token);
+
+        //Verificação
+        assertEquals(email, result);
+    }
+
+    @Test
+    void validateTokenFailTest() throws Exception {
+        Field jwtSecretField = AuthenticateUserService.class.getDeclaredField("jwtSecret");
+        jwtSecretField.setAccessible(true);
+        jwtSecretField.set(authenticateUserService, "meusegredosecreto");
+
+        // Token inválido (vazio ou mal formado)
+        String invalidToken = "token.malformado";
+
+        Method method = AuthenticateUserService.class.getDeclaredMethod("validateToken", String.class);
+        method.setAccessible(true);
+
+        String result = (String) method.invoke(authenticateUserService, invalidToken);
+
+        assertEquals("", result);
     }
 }

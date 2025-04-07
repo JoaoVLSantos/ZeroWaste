@@ -126,6 +126,34 @@ class EditProductServiceTest {
     }
 
     @Test
+    @DisplayName("It should throw ProductNotFoundException")
+    void itShouldThrowExceptionForProductNotFound2() {
+        // Arrange
+
+        Long id = null;
+
+        var dto = new EditProductDTO(
+                "Product New Name",
+                "Product New Description",
+                "Product New Brand",
+                ProductCategory.HYGIENE.getCategory(),
+                20.0,
+                null,
+                20,
+                LocalDate.now().plusDays(2),
+                null);
+        
+        Product product = new Product();
+        product.setDeletedAt(LocalDate.now());
+
+        when(productsRepository.findById(id)).thenReturn(Optional.of(product));
+
+        // Act & Assert
+        assertThrows(ProductNotFoundException.class, () -> sut.execute(id, dto));
+        verify(this.productsRepository, times(1)).findById(id);
+    }
+
+    @Test
     @DisplayName("It should find promotions by IDs")
     void itShouldFindPromotionsByIds() {
         // Arrange

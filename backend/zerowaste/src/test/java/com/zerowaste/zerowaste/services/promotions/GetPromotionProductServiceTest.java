@@ -7,6 +7,7 @@ import com.zerowaste.repositories.PromotionsRepository;
 import com.zerowaste.services.promotions.GetPromotionProductService;
 import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -80,6 +81,37 @@ class GetPromotionProductServiceTest {
         // Arrange
         String productName = "Product Name";
         when(promotionsRepository.findByProducts_Name(productName)).thenReturn(Collections.emptyList());
+        // Act & Assert
+        assertThrows(PromotionNotFoundException.class, () -> sut.execute(productName));
+    }
+
+    @Test
+    @DisplayName("It should throw PromotionNotFoundException")
+    void itShouldThrowExceptionForPromotionNotFound2() {
+        // Arrange
+        String productName = "Product Name";
+        Product product = new Product();
+        product.setId(2l);
+        product.setName(productName);
+        product.setDescription("Product Description");
+        product.setBrand("Product Brand");
+        product.setCategory(ProductCategory.BAKERY);
+        product.setUnitPrice(10.0);
+        product.setStock(10);
+        product.setExpiresAt(java.time.LocalDate.now().plusDays(1));
+
+        Long id = 1l;
+        Promotion promotion = new Promotion();
+        promotion.setId(id);
+        promotion.setName("Promotion Name");
+        promotion.setPercentage(15);
+        promotion.setStartsAt(java.time.LocalDate.now().minusDays(1));
+        promotion.setEndsAt(java.time.LocalDate.now().plusDays(1));
+        promotion.setProducts(Set.of(product));
+        promotion.setDeletedAt(LocalDate.now());
+
+        when(promotionsRepository.findByProducts_Name(productName)).thenReturn(List.of(promotion));
+
         // Act & Assert
         assertThrows(PromotionNotFoundException.class, () -> sut.execute(productName));
     }

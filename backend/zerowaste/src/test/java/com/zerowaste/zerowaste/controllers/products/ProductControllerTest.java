@@ -7,6 +7,9 @@ import com.zerowaste.controllers.products.ProductController;
 import com.zerowaste.dtos.products.CreateProductDTO;
 import com.zerowaste.dtos.products.EditProductDTO;
 import com.zerowaste.dtos.products.GetProductsResponseBodyDTO;
+import com.zerowaste.dtos.products.WasteByCategoryDTO;
+import com.zerowaste.dtos.products.WasteReportBodyDTO;
+import com.zerowaste.dtos.products.WasteReportQueryDTO;
 import com.zerowaste.models.product.Product;
 import com.zerowaste.models.product.ProductCategory;
 import com.zerowaste.models.product.ProductStatus;
@@ -16,6 +19,7 @@ import com.zerowaste.services.products.EditProductService;
 import com.zerowaste.services.products.GetExpiringProductsService;
 import com.zerowaste.services.products.GetProductIdService;
 import com.zerowaste.services.products.GetProductService;
+import com.zerowaste.services.products.GetWasteReportService;
 import com.zerowaste.services.products.SetProductStatusService;
 import com.zerowaste.services.products.exceptions.ProductNotAvailableException;
 import com.zerowaste.services.products.exceptions.ProductNotFoundException;
@@ -68,6 +72,9 @@ class ProductControllerTest {
 
     @Mock
     private GetExpiringProductsService getExpiringProductsService;
+
+    @Mock
+    private GetWasteReportService getWasteReportService;
 
     @InjectMocks
     private ProductController productController;
@@ -371,4 +378,42 @@ class ProductControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals(Constants.GENERALEXCEPTIONCATCHTEXT + "Erro interno", response.getBody().get(Constants.MESSAGE));
     }
+
+    @Test
+    void getReportWasteTest() throws Exception {
+        WasteReportQueryDTO dto = new WasteReportQueryDTO(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
+
+        WasteReportBodyDTO retorno = new WasteReportBodyDTO(
+            10, 
+            100, 
+            List.of(
+                new WasteByCategoryDTO("MEAT", 10, 10)
+            )    
+        );
+
+        when(getWasteReportService.execute(dto)).thenReturn(retorno);
+
+        //Executando controller
+        ResponseEntity<Map<String, Object>> response = productController.productsReport(dto);
+    
+        //Verificando
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("WasteReportBodyDTO[totalAmount=10, totalCost=100.0, wastePerCategories=[WasteByCategoryDTO[category=MEAT, quantity=10, cost=10.0]]]", 
+                    response.getBody().get("waste_report").toString());
+    }
+
+    @Test
+    void getReportWasteFailTest() throws Exception {
+        WasteReportQueryDTO dto = new WasteReportQueryDTO(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
+
+        when(getWasteReportService.execute(dto)).thenThrow(new RuntimeException());
+
+        //Executando controller
+        ResponseEntity<Map<String, Object>> response = productController.productsReport(dto);
+    
+        //Verificando
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(Constants.GENERALEXCEPTIONCATCHTEXT + "null", response.getBody().get(Constants.MESSAGE));
+    }
+
 }

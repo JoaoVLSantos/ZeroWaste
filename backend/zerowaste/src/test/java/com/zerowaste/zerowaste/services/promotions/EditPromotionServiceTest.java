@@ -2,14 +2,18 @@ package com.zerowaste.zerowaste.services.promotions;
 
 import com.zerowaste.dtos.promotions.AddPromotionDTO;
 import com.zerowaste.dtos.promotions.EditPromotionDTO;
+import com.zerowaste.models.product.Product;
+import com.zerowaste.models.product.ProductCategory;
 import com.zerowaste.models.promotion.Promotion;
 import com.zerowaste.repositories.ProductsRepository;
 import com.zerowaste.repositories.PromotionsRepository;
 import com.zerowaste.services.products.exceptions.ProductNotFoundException;
 import com.zerowaste.services.promotions.EditPromotionService;
 import com.zerowaste.services.promotions.exceptions.InvalidDatePeriodException;
+import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
+
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,8 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,7 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class EditPromotionServiceTest {
 
-    @InjectMocks
     private EditPromotionService sut;
 
     @Mock
@@ -41,6 +45,7 @@ class EditPromotionServiceTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+        this.sut = new EditPromotionService(promotionsRepository, productRepository);
     }
 
     @Test
@@ -100,7 +105,36 @@ class EditPromotionServiceTest {
         when(promotionsRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(NoSuchElementException.class, () -> sut.execute(id, dto));
+        assertThrows(PromotionNotFoundException.class, () -> sut.execute(id, dto));
+    }
+
+    @Test
+    @DisplayName("It should throw PromotionNotFoundException")
+    void itShouldThrowExceptionForPromotionNotFound2() {
+        // Arrange
+        var dto = new EditPromotionDTO(
+            "Promotion Ed Name",
+            20,
+            java.time.LocalDate.now().minusDays(2),
+            java.time.LocalDate.now().plusDays(2),
+            Set.of()
+        );
+        
+        var promotion = new Promotion();
+
+        Long id = 1l;
+        promotion.setName(dto.name());
+        promotion.setId(id);
+        promotion.setPercentage(dto.percentage());
+        promotion.setStartsAt(dto.startsAt());
+        promotion.setEndsAt(dto.endsAt());
+        promotion.setCreatedAt(LocalDate.now());
+        promotion.setDeletedAt(LocalDate.now());
+
+        when(promotionsRepository.findById(id)).thenReturn(Optional.of(promotion));
+
+        // Act & Assert
+        assertThrows(PromotionNotFoundException.class, () -> sut.execute(id, dto));
     }
 
     @Test
@@ -168,44 +202,43 @@ class EditPromotionServiceTest {
         assertThrows(ProductNotFoundException.class, () -> sut.execute(id, dto));
     }
 
-    //**@Test (Teste inativo pois apresenta algum erro desconhecido mesmo tendo sido implementado corretamente)
-    // @DisplayName("It should update promotional price of products")
-    // void itShouldUpdatePromotionalPriceOfProducts() {
-    //     // Arrange
-    //     Long id = 1l;
-    //     Long productId = 1l;
+    @Test
+    @DisplayName("It should update promotional price of products")
+    void itShouldUpdatePromotionalPriceOfProducts() {
+        // Arrange
+        Long id = 1L;
+        Long productId = 1L;
 
-    //     Product product = new Product();
-    //     product.setId(productId);
-    //     product.setName("Product N");
-    //     product.setDescription("aaaa");
-    //     product.setBrand("aaaaa");
-    //     product.setCategory(ProductCategory.HYGIENE);
-    //     product.setUnitPrice(20.0);
-    //     product.setStock(20);
-    //     product.setCreatedAt(LocalDate.now());
-    //     product.setExpiresAt(LocalDate.now().plusDays(1));
+        Product product = new Product();
+        product.setId(productId);
+        product.setName("Product N");
+        product.setDescription("aaaa");
+        product.setBrand("aaaaa");
+        product.setCategory(ProductCategory.HYGIENE);
+        product.setUnitPrice(20.0);
+        product.setStock(20);
+        product.setCreatedAt(LocalDate.now());
+        product.setExpiresAt(LocalDate.now().plusDays(1));
 
-    //     var dto = new EditPromotionDTO(
-    //             "Promotion Ed Name",
-    //             20,
-    //             java.time.LocalDate.now().minusDays(2),
-    //             java.time.LocalDate.now().plusDays(2),
-    //             Set.of(productId)
-    //     );
+        var dto = new EditPromotionDTO(
+                "Promotion Name",
+                20,
+                java.time.LocalDate.now().minusDays(2),
+                java.time.LocalDate.now().plusDays(2),
+                Set.of(productId)
+        );
 
-    //     Promotion promotion = new Promotion();
-    //     promotion.setId(id);
-    //     promotion.setName(dto.name());
-    //     promotion.setPercentage(dto.percentage());
-    //     promotion.setStartsAt(dto.startsAt());
-    //     promotion.setEndsAt(dto.endsAt());
+        Promotion promotion = new Promotion();
+        promotion.setId(id);
+        promotion.setName(dto.name());
+        promotion.setPercentage(dto.percentage());
+        promotion.setStartsAt(dto.startsAt());
+        promotion.setEndsAt(dto.endsAt());
 
-    //     when(promotionsRepository.findById(id)).thenReturn(Optional.of(promotion));
-    //     when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        when(promotionsRepository.findById(id)).thenReturn(Optional.of(promotion));
+        when(productRepository.findAllById(anySet())).thenReturn(List.of(product));
 
-    //     assertDoesNotThrow(() -> sut.execute(id, dto));
-
-    // }
+        assertDoesNotThrow(() -> sut.execute(id, dto));
+    }
 
 }

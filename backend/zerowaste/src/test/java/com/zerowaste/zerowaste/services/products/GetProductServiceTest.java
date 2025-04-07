@@ -5,6 +5,7 @@ import com.zerowaste.dtos.products.GetProductsRequestQueryDTO;
 import com.zerowaste.dtos.products.GetProductsResponseBodyDTO;
 import com.zerowaste.models.product.Product;
 import com.zerowaste.models.product.ProductCategory;
+import com.zerowaste.models.product.ProductStatus;
 import com.zerowaste.repositories.ProductsRepository;
 import com.zerowaste.services.products.GetProductService;
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ class GetProductServiceTest {
 
         var product = new Product();
 
-        Integer daysToExpire = 1;
+        Integer daysToExpire = 2;
         product.setName(dto.name());
         product.setDescription(dto.description());
         product.setBrand(dto.brand());
@@ -61,14 +62,27 @@ class GetProductServiceTest {
         product.setUnitPrice(dto.unitPrice());
         product.setStock(dto.stock());
         product.setExpiresAt(dto.expiresAt());
+        product.setStatus(ProductStatus.AVALIABLE);
 
         var dtoGet = new GetProductsRequestQueryDTO(daysToExpire);
 
         when(productsRepository.findAllNotDeleted(daysToExpire)).thenReturn(List.of(product));
+
+        GetProductsResponseBodyDTO response = new GetProductsResponseBodyDTO(
+            null, 
+            dto.name(), 
+            dto.description(), 
+            dto.brand(), 
+            ProductCategory.valueOf(dto.category()), 
+            dto.unitPrice(), 
+            null, 
+            dto.stock(), 
+            dto.expiresAt(), 
+            ProductStatus.AVALIABLE);
         
         // Act & Assert
         List<GetProductsResponseBodyDTO> result = assertDoesNotThrow(() -> sut.execute(dtoGet));
-        assertEquals(product, result.get(0));
+        assertEquals(response, result.get(0));
         verify(this.productsRepository, times(1)).findAllNotDeleted(daysToExpire);
     }
 }
