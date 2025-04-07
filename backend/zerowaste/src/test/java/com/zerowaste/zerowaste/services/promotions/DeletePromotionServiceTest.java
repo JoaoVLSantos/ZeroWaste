@@ -5,7 +5,6 @@ import com.zerowaste.repositories.PromotionsRepository;
 import com.zerowaste.services.promotions.DeletePromotionService;
 import com.zerowaste.services.promotions.exceptions.PromotionNotFoundException;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
