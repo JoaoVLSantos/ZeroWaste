@@ -1,0 +1,52 @@
+<section class="container">
+
+  <!-- Formulário para período de datas -->
+  <form [formGroup]="datePeriodForm" (ngSubmit)="onSubmit($event)">
+    <h3>Período de data para o relatório</h3>
+
+    <div class="form-group">
+      <div class="row">
+        <app-input [id]="'startDate'" [name]="'startDate'" [type]="'date'" [placeholder]="'Data inicial'"
+          formControlName="startDate" />
+
+        <app-input [id]="'endDate'" [name]="'endDate'" [type]="'date'" [placeholder]="'Data inicial'"
+          formControlName="endDate" />
+
+        <app-button [type]="'submit'">
+          Enviar
+        </app-button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Relatório -->
+  <div *ngIf="wasteReport() as report">
+    <ng-container *ngIf="report.totalAmount > 0">
+
+      <div class="row mb-10px">
+        <app-card>
+          <app-card-header><b>Produtos Vencidos</b></app-card-header>
+          <app-card-content class="text-center">{{ report.totalAmount }}</app-card-content>
+        </app-card>
+
+        <app-card>
+          <app-card-header><b>Valor Total de Vencidos</b></app-card-header>
+          <app-card-content class="text-center">R$ {{ report.totalCost }}</app-card-content>
+        </app-card>
+      </div>
+
+      <app-card class="mb-10px">
+        <app-card-header><b>Desperdício por Categoria</b></app-card-header>
+        <div *ngIf="barChartData().length > 0">
+          <ngx-charts-bar-vertical [results]="barChartData()" [xAxis]="true" [yAxis]="true" [legend]="true"
+            [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Categoria'" [yAxisLabel]="'Custo (R$)'"
+            [animations]="true" [view]="[600, 400]">
+          </ngx-charts-bar-vertical>
+        </div>
+      </app-card>
+
+
+    </ng-container>
+  </div>
+
+</section>
