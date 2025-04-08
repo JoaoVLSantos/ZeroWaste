@@ -15,10 +15,14 @@
   text-align: center;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centraliza horizontalmente */
+  gap: 16px; /* espaço entre os cards */
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .grid-item {
