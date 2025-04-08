@@ -394,7 +394,7 @@ class ProductControllerTest {
         when(getWasteReportService.execute(dto)).thenReturn(retorno);
 
         //Executando controller
-        ResponseEntity<Map<String, Object>> response = productController.productsReport(dto);
+        ResponseEntity<Map<String, Object>> response = productController.productsReport(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
     
         //Verificando
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -409,7 +409,7 @@ class ProductControllerTest {
         when(getWasteReportService.execute(dto)).thenThrow(new RuntimeException());
 
         //Executando controller
-        ResponseEntity<Map<String, Object>> response = productController.productsReport(dto);
+        ResponseEntity<Map<String, Object>> response = productController.productsReport(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
     
         //Verificando
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

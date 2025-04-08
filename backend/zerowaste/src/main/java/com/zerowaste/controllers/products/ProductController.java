@@ -18,7 +18,11 @@ import com.zerowaste.services.products.exceptions.ProductNotFoundException;
 import com.zerowaste.utils.Constants;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDate;
 import java.util.Map;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -197,8 +202,12 @@ public class ProductController {
     }
 
     @GetMapping("/reports/waste")
-    public ResponseEntity<Map<String, Object>> productsReport(@RequestBody @Valid WasteReportQueryDTO dto) {
+    public ResponseEntity<Map<String, Object>> productsReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
         try {
+            WasteReportQueryDTO dto = new WasteReportQueryDTO(startDate, endDate);
             return ResponseEntity.ok(Map.of("waste_report", getWasteReportService.execute(dto)));
         }
         catch(Exception err) {
