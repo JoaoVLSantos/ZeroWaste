@@ -10,6 +10,16 @@
           {{ link.name }}
         </a>
       </li>
+
+      <!-- 👇 Link visível só para ADMIN -->
+      <li *ngIf="isAdmin()">
+        <a
+          routerLink="/reports/waste"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          Relatórios
+        </a>
+      </li>
     </ul>
     <app-logout></app-logout>
   </div>

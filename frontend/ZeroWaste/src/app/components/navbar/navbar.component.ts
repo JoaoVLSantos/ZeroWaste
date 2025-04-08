@@ -20,10 +20,14 @@ export class NavbarComponent {
     { name: 'Doações', url: '/donations' },
     { name: 'Pontos de doação', url: '/donation-points' },
     { name: 'Listas de transmissão', url: '/broadcasts' },
-    { name: 'Relatórios', url: '/reports/waste' }
+    // { name: 'Relatórios', url: '/reports/waste' }
   ];
 
   isAuthenticated() {
     return this.authService.isAuthenticated();
+  }
+
+  isAdmin() {
+    return this.authService.hasRole('ADMIN');
   }
 }
