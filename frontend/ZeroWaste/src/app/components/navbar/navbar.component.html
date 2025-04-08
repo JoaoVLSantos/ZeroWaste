@@ -1,31 +1,27 @@
 <nav class="navbar" *ngIf="isAuthenticated()">
   <div class="navbar-container">
-    <a class="navbar-logo" routerLink="/home">ZeroWaste</a>
+    <a class="navbar-logo" routerLink="/home">
+      <div class="row nav-logo">
+        <img class="logo-img" src="zerowaste-logo.png" alt="logo">
+        ZeroWaste
+      </div>
+    </a>
     <ul class="navbar-links">
       <li *ngFor="let link of links">
-        <a
-          routerLink="{{ link.url }}"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="{{ link.url }}" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           {{ link.name }}
         </a>
       </li>
 
       <!-- Links visíveis só para ADMIN -->
       <li *ngIf="isAdmin()">
-        <a
-          routerLink="/donation-points"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="/donation-points" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           Pontos de doação
         </a>
       </li>
 
       <li *ngIf="isAdmin()">
-        <a
-          routerLink="/reports/waste"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">
+        <a routerLink="/reports/waste" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           Relatórios
         </a>
       </li>
