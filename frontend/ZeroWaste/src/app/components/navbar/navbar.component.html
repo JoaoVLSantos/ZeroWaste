@@ -25,6 +25,13 @@
           Relatórios
         </a>
       </li>
+
+      <li *ngIf="isAdmin()">
+        <a routerLink="/broadcasts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Lista de transmissão
+        </a>
+      </li>
+
     </ul>
     <app-logout></app-logout>
   </div>
