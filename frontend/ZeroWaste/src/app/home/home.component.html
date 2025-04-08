@@ -10,7 +10,7 @@
   </section>
 
   <!-- Promoções ativas -->
-  <section>
+  <app-card>
     <h2>Promoções ativas</h2>
     <div *ngIf="activePromotions().length; else noPromotions" class="grid-container">
       <div *ngFor="let p of activePromotions(); trackBy: trackByPromotionId" class="grid-item">
@@ -34,7 +34,7 @@
 
       </div>
     </div>
-  </section>
+  </app-card>
 
 
   <!-- Caso a promoção não tenha produtos -->
