@@ -62,13 +62,13 @@
       <div class="form-group">
         <label for="category">Categoria</label>
         <app-select [id]="'category'" [name]="'category'" [placeholder]="'Selecione uma categoria'" formControlName="category">
-          <option value="DAIRY">DAIRY</option>
-          <option value="FRUIT">FRUIT</option>
-          <option value="HYGIENE">HYGIENE</option>
-          <option value="CLEANING">CLEANING</option>
-          <option value="DRINK">DRINK</option>
-          <option value="MEAT">MEAT</option>
-          <option value="BAKERY">BAKERY</option>
+          <option value="DAIRY">LATICÍNIOS</option>
+          <option value="FRUIT">FRUTAS</option>
+          <option value="HYGIENE">HIGIENE</option>
+          <option value="CLEANING">LIMPEZA</option>
+          <option value="DRINK">BEBIDA</option>
+          <option value="MEAT">CARNE</option>
+          <option value="BAKERY">PADARIA</option>
         </app-select>
         <small *ngIf="productForm.get('category')?.touched && getErrorMessage('category') as errorMessage" class="invalid-feedback">
           {{errorMessage}}
