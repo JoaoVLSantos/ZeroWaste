@@ -15,10 +15,16 @@
   text-align: center;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* centraliza horizontalmente */
   gap: 16px;
+  /* espaço entre os cards */
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .grid-item {
@@ -29,4 +35,8 @@
 .card-size {
   width: 288px;
   height: 182px;
+}
+
+header {
+  margin-bottom: 50px;
 }

@@ -14,12 +14,14 @@ export const routes: Routes = [
         title: 'Create Promotion',
         component: CreatePromotionFormPageComponent,
         canActivate: [authGuard],
+        data: { role: 'ADMIN' },
       },
       {
         path: 'update/:id',
         title: 'Update Promotion',
         component: UpdatePromotionFormPageComponent,
         canActivate: [authGuard],
+        data: { role: 'ADMIN' },
       },
       {
         path: ':id',

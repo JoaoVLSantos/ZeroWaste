@@ -1,5 +1,10 @@
 <div class="container">
 
+  <header class="text-center">
+    <h1>Bem-vindo(a) ao Zerowaste!</h1>
+    <p>Estamos felizes em tê-lo(a) aqui.</p>
+  </header>
+
   <!-- Produtos a vencer -->
   <section>
     <h2>Produtos a vencer</h2>
@@ -11,8 +16,8 @@
 
   <!-- Promoções ativas -->
   <section>
-    <h2>Promoções ativas</h2>
-    <div *ngIf="activePromotions().length; else noPromotions" class="grid-container">
+    <h2 class="text-center">Promoções ativas</h2>
+    <div *ngIf="activePromotions().length; else noPromotions" class="flex-container">
       <div *ngFor="let p of activePromotions(); trackBy: trackByPromotionId" class="grid-item">
 
         <app-card class="text-center card-size">
