@@ -81,4 +81,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: backend/zerowaste/target/site/jacoco/index.html
+          path: backend/zerowaste/target/site/jacoco/
