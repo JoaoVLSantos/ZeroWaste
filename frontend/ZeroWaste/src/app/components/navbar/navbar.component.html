@@ -11,7 +11,16 @@
         </a>
       </li>
 
-      <!-- 👇 Link visível só para ADMIN -->
+      <!-- Links visíveis só para ADMIN -->
+      <li *ngIf="isAdmin()">
+        <a
+          routerLink="/donation-points"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }">
+          Pontos de doação
+        </a>
+      </li>
+
       <li *ngIf="isAdmin()">
         <a
           routerLink="/reports/waste"
