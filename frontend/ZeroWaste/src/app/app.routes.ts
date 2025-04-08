@@ -8,6 +8,7 @@ import { routes as promotionsRoutes } from './pages/promotions/promotions.routes
 import { routes as donations_pointsRoutes } from './pages/donations_points/donations_points.routes';
 import { routes as donationsRoutes } from './pages/donations/donations.routes';
 import { routes as broadcastsRoutes } from './pages/broadcasts/broadcast.routes';
+import { routes as reportsRoutes } from './pages/reports/reports.routes';
 
 
 const routes: Routes = [
@@ -36,6 +37,7 @@ const routes: Routes = [
   ...donations_pointsRoutes,
   ...donationsRoutes,
   ...broadcastsRoutes,
+  ...reportsRoutes
 ];
 
 export default routes;

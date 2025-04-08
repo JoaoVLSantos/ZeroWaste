@@ -1,0 +1,40 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mb-10px {
+  margin-bottom: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-item {
+  display: flex;
+  justify-content: center;
+}
+
+.card-size {
+  width: 288px;
+  height: 182px;
+}
+
+/* ✅ Novo estilo para espaçamento entre os cards */
+.row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
