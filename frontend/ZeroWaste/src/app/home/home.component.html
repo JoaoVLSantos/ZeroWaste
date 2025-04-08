@@ -1,5 +1,10 @@
 <div class="container">
 
+  <header class="text-center">
+    <h1>Bem-vindo(a) ao Zerowaste!</h1>
+    <p>Estamos felizes em tê-lo(a) aqui.</p>
+  </header>
+
   <!-- Produtos a vencer -->
   <section>
     <h2>Produtos a vencer</h2>
@@ -10,29 +15,31 @@
   </section>
 
   <!-- Promoções ativas -->
-  <h2>Promoções ativas</h2>
-  <div *ngIf="activePromotions().length; else noPromotions" class="flex-container">
-    <div *ngFor="let p of activePromotions(); trackBy: trackByPromotionId" class="grid-item">
+  <section>
+    <h2 class="text-center">Promoções ativas</h2>
+    <div *ngIf="activePromotions().length; else noPromotions" class="flex-container">
+      <div *ngFor="let p of activePromotions(); trackBy: trackByPromotionId" class="grid-item">
 
-      <app-card class="text-center card-size">
-        <app-card-header>{{ p.name }}</app-card-header>
-        <app-card-content>{{ p.percentage }}% de desconto</app-card-content>
-        <app-card-content><b>Acaba em:</b> {{ p.endsAt }} </app-card-content>
+        <app-card class="text-center card-size">
+          <app-card-header>{{ p.name }}</app-card-header>
+          <app-card-content>{{ p.percentage }}% de desconto</app-card-content>
+          <app-card-content><b>Acaba em:</b> {{ p.endsAt }} </app-card-content>
 
-        <!-- Produtos dentro da promoção -->
-        <ng-container *ngIf="p.products?.length; else noProducts">
+          <!-- Produtos dentro da promoção -->
+          <ng-container *ngIf="p.products?.length; else noProducts">
 
-          <app-select [placeholder]="'Produtos cadastrados'">
-            <ng-container *ngFor="let product of p.products; trackBy: trackByProductId">
-              <option>{{ product.name }}</option>
-            </ng-container>
-          </app-select>
+            <app-select [placeholder]="'Produtos cadastrados'">
+              <ng-container *ngFor="let product of p.products; trackBy: trackByProductId">
+                <option>{{ product.name }}</option>
+              </ng-container>
+            </app-select>
 
-        </ng-container>
-      </app-card>
+          </ng-container>
+        </app-card>
 
+      </div>
     </div>
-  </div>
+  </section>
 
 
   <!-- Caso a promoção não tenha produtos -->
