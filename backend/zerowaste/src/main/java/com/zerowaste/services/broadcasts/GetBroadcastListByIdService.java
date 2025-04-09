@@ -25,7 +25,7 @@ public class GetBroadcastListByIdService {
             throw new BroadcastListNotFoundException("Lista de transmissão não encontrada");
         }
         
-        var broadcastListDTO = new GetBroadcastListByIdResponseBodyDTO(
+        return new GetBroadcastListByIdResponseBodyDTO(
             broadcast.getId(),
             broadcast.getName(),
             broadcast.getDescription(),
@@ -36,8 +36,6 @@ public class GetBroadcastListByIdService {
             broadcast.getUpdatedAt() == null ? null : broadcast.getUpdatedAt().toString(),
             Optional.ofNullable(broadcast.getDeletedAt()).map(Object::toString).orElse(null)
         );
-
-        return broadcastListDTO;
     }
 }
 
