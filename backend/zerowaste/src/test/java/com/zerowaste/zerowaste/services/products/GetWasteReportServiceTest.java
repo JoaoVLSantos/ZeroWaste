@@ -19,7 +19,7 @@ import com.zerowaste.repositories.ProductsRepository;
 import com.zerowaste.services.products.GetWasteReportService;
 
 @ExtendWith(MockitoExtension.class)
-public class GetWasteReportServiceTest {
+class GetWasteReportServiceTest {
     
     private GetWasteReportService getWasteReportService;
 
