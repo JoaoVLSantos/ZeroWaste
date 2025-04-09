@@ -32,7 +32,6 @@ public class GetWasteReportService {
             wastePerCategory.add(new WasteByCategoryDTO(obj[0].toString(), (long) obj[1], (double) obj[2]));
         }
 
-        WasteReportBodyDTO wasteReportBodyDTO = new WasteReportBodyDTO(totalAmount, totalCost, wastePerCategory);
-        return wasteReportBodyDTO;
+        return new WasteReportBodyDTO(totalAmount, totalCost, wastePerCategory);
     }
 }
