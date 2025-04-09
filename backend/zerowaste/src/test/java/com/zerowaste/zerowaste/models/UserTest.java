@@ -1,7 +1,6 @@
 package com.zerowaste.zerowaste.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -133,7 +132,7 @@ class UserTest {
         user2.setId(1L);
         user2.setEmail("test@example.com");
 
-        assertTrue(user1.equals(user2));
+        assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
     }
 
@@ -175,7 +174,7 @@ class UserTest {
         user.setId(1L);
         user.setEmail("test@example.com");
 
-        assertTrue(user.equals(user));
+        assertEquals(user, user);
     }
 
     @Test
@@ -187,8 +186,8 @@ class UserTest {
         user2.setId(1L);
         user2.setEmail("test@example.com");
 
-        assertTrue(user1.equals(user2));
-        assertTrue(user2.equals(user1));
+        assertEquals(user1, user2);
+        assertEquals(user2, user1);
     }
 
     @Test
@@ -203,9 +202,9 @@ class UserTest {
         user3.setId(1L);
         user3.setEmail("test@example.com");
        
-        assertTrue(user1.equals(user2));
-        assertTrue(user2.equals(user3));
-        assertTrue(user1.equals(user3));
+        assertEquals(user1, user2);
+        assertEquals(user2, user3);
+        assertEquals(user1, user3);
     }
 
     @Test
@@ -217,8 +216,8 @@ class UserTest {
         user2.setId(1L);
         user2.setEmail("test@example.com");
 
-        assertTrue(user1.equals(user2));
-        assertTrue(user1.equals(user2)); //Chamada sequencial deve retornar o mesmo valor
+        assertEquals(user1, user2);
+        assertEquals(user1, user2); //Chamada sequencial deve retornar o mesmo valor
     }
 
     @Test
@@ -227,7 +226,7 @@ class UserTest {
         user.setId(1L);
         user.setEmail("test@example.com");
         
-        assertFalse(user.equals(null));
+        assertNotEquals(null, user);
     }
 
     @Test
@@ -237,7 +236,7 @@ class UserTest {
         user.setEmail("test@example.com");
         String otherObject = "Some other object";
 
-        assertFalse(user.equals(otherObject));
+        assertNotEquals(otherObject, user);
     }
 
     @Test
@@ -249,7 +248,7 @@ class UserTest {
         user2.setId(2L);
         user2.setEmail("test@example.com");
 
-        assertFalse(user1.equals(user2));
+        assertNotEquals(user1, user2);
     }
 
     @Test
@@ -261,7 +260,7 @@ class UserTest {
         user2.setId(1L);
         user2.setEmail("outro@example.com");
 
-        assertFalse(user1.equals(user2));
+        assertNotEquals(user1, user2);
     }
 
     @Test
@@ -273,7 +272,7 @@ class UserTest {
         user2.setId(null);
         user2.setEmail("test@example.com");
 
-        assertTrue(user1.equals(user2));
+        assertEquals(user1, user2);
     }
 
     @Test
@@ -285,6 +284,6 @@ class UserTest {
         user2.setId(1L);
         user2.setEmail(null);
 
-        assertTrue(user1.equals(user2));
+        assertEquals(user1, user2);
     }
 }

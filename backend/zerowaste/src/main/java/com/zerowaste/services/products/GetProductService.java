@@ -18,7 +18,7 @@ public class GetProductService {
     public List<GetProductsResponseBodyDTO> execute (GetProductsRequestQueryDTO dto) {
         var products = productsRepository.findAllNotDeleted(dto.daysToExpire());
 
-        var productsDTO = products.stream()
+        return products.stream()
             .map(product -> new GetProductsResponseBodyDTO(
                 product.getId(),
                 product.getName(),
@@ -32,7 +32,5 @@ public class GetProductService {
                 product.getStatus().name()
             ))
             .toList();
-
-        return productsDTO;
     }
 }

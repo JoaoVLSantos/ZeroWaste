@@ -85,7 +85,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void TestCreateProduct_Success() throws Exception {
+    void TestCreateProduct_Success() {
         //Criando DTO
         CreateProductDTO dto = new CreateProductDTO(
             "Teste", 
@@ -380,7 +380,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getReportWasteTest() throws Exception {
+    void getReportWasteTest() {
         WasteReportQueryDTO dto = new WasteReportQueryDTO(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
 
         WasteReportBodyDTO retorno = new WasteReportBodyDTO(
@@ -403,7 +403,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getReportWasteFailTest() throws Exception {
+    void getReportWasteFailTest() {
         WasteReportQueryDTO dto = new WasteReportQueryDTO(LocalDate.now().minusDays(5), LocalDate.now().minusDays(3));
 
         when(getWasteReportService.execute(dto)).thenThrow(new RuntimeException());

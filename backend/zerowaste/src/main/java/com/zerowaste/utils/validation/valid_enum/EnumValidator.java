@@ -1,7 +1,6 @@
 package com.zerowaste.utils.validation.valid_enum;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.validation.ConstraintValidator;
@@ -14,7 +13,7 @@ public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
     public void initialize(ValidEnum constraintAnnotation) {
         valueList = Stream.of(constraintAnnotation.targetClassType().getEnumConstants())
                 .map(e -> ((Enum<?>) e).name())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

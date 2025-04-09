@@ -157,21 +157,26 @@ class PromotionControllerTest {
     @Test
     void testGetPromotionByPercentageSuccess() throws Exception {
         // Simulando o serviço retornando uma lista de promoções
-        List<PromotionDTO> promotions = new ArrayList<>();
-        promotions.add(new PromotionDTO(1L, "Promoção 1", 20, LocalDate.now(), LocalDate.now().plusDays(10)));
-        promotions.add(new PromotionDTO(2L, "Promoção 2", 30, LocalDate.now(), LocalDate.now().plusDays(5)));
+        Promotion promotion1 = new Promotion();
+        promotion1.setId(1L);
+        promotion1.setName("Promoção 1");
+        promotion1.setPercentage(20);
+
+        List<Promotion> promotions = new ArrayList<>();
+        promotions.add(promotion1);
+
+        int percentage = 20;
 
         // Simulando o serviço retornando a lista de promoções
-        when(getPromotionService.execute()).thenReturn(promotions);
+        when(getPromotionPercentageService.execute(percentage)).thenReturn(promotions);
 
         // Requisição e verificação
-        mockMvc.perform(get("/promotions/"))
+        mockMvc.perform(get("/promotions/percentageFilter/" + percentage))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.promotions[0].name").value("Promoção 1"))
-            .andExpect(jsonPath("$.promotions[1].name").value("Promoção 2"));
+            .andExpect(jsonPath("$.promotions[0].name").value("Promoção 1"));
 
         // Verificação do mock
-        verify(getPromotionService, times(1)).execute();
+        verify(getPromotionPercentageService, times(1)).execute(percentage);
 }
 
     @Test
