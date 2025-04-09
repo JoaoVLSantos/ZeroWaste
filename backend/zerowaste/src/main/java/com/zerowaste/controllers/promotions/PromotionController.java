@@ -40,6 +40,8 @@ public class PromotionController {
         private final GetPromotionService getPromotionService;
         private final GetActivePromotionsService getActivePromotionsService;
 
+        private final String promotionsBody = "promotions";
+
         public PromotionController(CreatePromotionService createPromotionService, DeletePromotionService deletePromotionService, EditPromotionService editPromotionService,
                                 GetPromotionsIdService getPromotionsIdService, GetPromotionPercentageService getPromotionPercentageService, GetPromotionProductService getPromotionProductService, 
                                 GetPromotionService getPromotionService, GetActivePromotionsService getActivePromotionsService) {
@@ -123,7 +125,7 @@ public class PromotionController {
     @GetMapping("/percentageFilter/{percentage}")
     public ResponseEntity<Map<String, Object>> getPromotionByPercentage(@PathVariable int percentage) {
         try{
-            return ResponseEntity.ok(Map.of("promotions", getPromotionPercentageService.execute(percentage)));
+            return ResponseEntity.ok(Map.of(promotionsBody, getPromotionPercentageService.execute(percentage)));
         } 
         catch(PromotionNotFoundException err) {
             return ResponseEntity
@@ -140,7 +142,7 @@ public class PromotionController {
     @GetMapping("/productFilter/{productName}")
     public ResponseEntity<Map<String, Object>> getPromotionByProductName(@PathVariable String productName) {
         try {
-            return ResponseEntity.ok(Map.of("promotions", getPromotionProductService.execute(productName)));
+            return ResponseEntity.ok(Map.of(promotionsBody, getPromotionProductService.execute(productName)));
         }
         catch(PromotionNotFoundException err) {
             return ResponseEntity
@@ -157,7 +159,7 @@ public class PromotionController {
     @GetMapping("/")
     public ResponseEntity<Map<String, Object>> getAllPromotions() {
         try {
-            return ResponseEntity.ok(Map.of("promotions", getPromotionService.execute()));
+            return ResponseEntity.ok(Map.of(promotionsBody, getPromotionService.execute()));
         } 
         catch(Exception err) {
             return ResponseEntity
@@ -169,7 +171,7 @@ public class PromotionController {
     @GetMapping("/active")
     public ResponseEntity<Map<String, Object>> getAllActivePromotions() {
         try {
-            return ResponseEntity.ok(Map.of("promotions", getActivePromotionsService.execute()));
+            return ResponseEntity.ok(Map.of(promotionsBody, getActivePromotionsService.execute()));
         }
         catch(Exception err) {
             return ResponseEntity
