@@ -51,7 +51,7 @@ class ProductTest {
         Product product = new Product();
         product.setId(1L);
 
-        assertNotEquals(product, null);
+        assertNotEquals(null, product);
     }
 
     @Test
@@ -59,7 +59,7 @@ class ProductTest {
         Product product = new Product();
         product.setId(1L);
 
-        assertNotEquals(product, "some string");
+        assertNotEquals("some string", product);
     }
 
     @Test

@@ -103,7 +103,7 @@ class PromotionTest {
         Promotion p = new Promotion();
         p.setId(1L);
 
-        assertNotEquals(p, null);
+        assertNotEquals(null, p);
     }
 
     @Test
@@ -111,7 +111,7 @@ class PromotionTest {
         Promotion p = new Promotion();
         p.setId(1L);
 
-        assertNotEquals(p, "uma string qualquer");
+        assertNotEquals("uma string qualquer", p);
     }
 
     @Test

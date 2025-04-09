@@ -72,7 +72,7 @@ class BroadcastEmailTest {
         BroadcastEmail p = new BroadcastEmail();
         p.setId(1L);
 
-        assertNotEquals(p, null);
+        assertNotEquals(null, p);
     }
 
     @Test
@@ -80,7 +80,7 @@ class BroadcastEmailTest {
         BroadcastEmail p = new BroadcastEmail();
         p.setId(1L);
 
-        assertNotEquals(p, "uma string qualquer");
+        assertNotEquals("uma string qualquer", p);
     }
 
     @Test
